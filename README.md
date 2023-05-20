@@ -1,100 +1,73 @@
-# Creating Nginx webserver in AWS in two instances with ALB
+Creating Nginx web server in AWS with two instances and ALB
+Note:
+The terraform/nginx_alb folder contains the code without Elastic IP (EIP).
+The terraform/nginx_alb_eip folder contains the code with Elastic IP (EIP).
+Prerequisites:
+Establish AWS CLI connection:
 
-## Note:
-# terraform/nginx_alb Folder container code without EIP (Elastic IP)
-# terraform/nginx_alb_eip Folder container code with EIP (Elastic IP)
+To establish an AWS CLI connection and configure access, refer to: AWS CLI User Guide.
+Install Terraform:
 
-## Pre requesites:
+To install Terraform, refer to: Terraform Downloads.
+Terraform code details:
+provide.tf
 
-1. AWS cli connection has been established
-  To establish AWS cli connection and configuring the access
-  Ref: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+The provider block is used to install and configure the necessary provider (AWS, Azure, GCP) for executing Terraform commands in the desired cloud environment.
+variable.tf
 
-2. Installation of Terraform
-  Ref: https://developer.hashicorp.com/terraform/downloads
+This file contains globally defined variables required to meet the project requirements. The following variables are defined:
+VPC Details (Change as per your requirement; default CIDR is used here)
+Instance Type Details (Change as per your requirement; free tier is used here)
+Image ID Details (Change as per your requirement; Ubuntu Image ID is used here)
+Keypair Details (Download your keypair into the code folder and update the keypair name in variable.tf file)
+data.tf
 
-## Terroform code details:
-**provide.tf**
-    Provider block is used to do Installation of provider (aws, azure, gcp) to perform the terraform execution as per the cloud environemt
-  
-**variable.tf**
-    This file containes globally defined details to achieve the requirements, below listed are defined varibles.
-    VPC Details *(Change as per your requirement, here used default CIDR)*
-    Instance Type Details *(Change as per your requirement, here used free tier)*
-    Image ID Details *(Change as per your requirement, here used Ubuntu Image ID)*
-    Keypair Details *(Download your keypair into code folder and change the name of your keypair in variable.tf file)*
- 
-**data.tf**
-    To fetch the available zones as per the requested region
- 
-**vpc.tf**
-    This file defines how to create the VPC, Subnet and Route Table as given in variable.tf and the zones has been created
-  as per the available zones by referring data.tf.
-  
-**secgroup.tf**
-    This file used to define what are all the ports need to be allowed instance and ALB level.
-  
-**ec2.tf**
-    This file containes ec2 instance creation for the ALB as per image ID given in variable.tf
-  
-**alb.tf**
-    This file containes ALB and Target group creation and association of the instance for the ALB.
-  
-**nginx.sh**
-  This file used to execute the installation of nginx using shell script.
-  *Note: command diff based on the distribuation here i used Ubuntu.*
-  
-**output.tf**
-    This file help to display the below details:
-    Public DNS (ALB URL)
-    Private DNS (Instance URL)
-    Public IP
-    Private IP
+This file fetches the available zones based on the requested region.
+vpc.tf
 
+This file defines the creation of VPC, Subnet, and Route Table using the details provided in variable.tf. The zones are created based on the available zones obtained from data.tf.
+secgroup.tf
+
+This file defines the ports to be allowed at the instance and ALB level.
+ec2.tf
+
+This file contains the code for creating EC2 instances for the ALB using the image ID provided in variable.tf.
+alb.tf
+
+This file contains the code for creating the ALB and Target Group and associating the instances with the ALB.
+nginx.sh
+
+This shell script file is used to install Nginx. The command may vary based on the distribution; here, Ubuntu is used.
+output.tf
+
+This file displays the following details:
+Public DNS (ALB URL)
+Private DNS (Instance URL)
+Public IP
+Private IP
 Installation Procedure:
-  Clone the git repo in local machine
-  
-  git clone https://github.com/nirmalk1004/terraform.git
-  
-  Change into the folder nginx_alb or nginx_alb_eip
-  
-  Download and move the aws keypair into the respective folder nginx_alb or nginx_alb_eip
-  
-  Need to change the variable.tf file as per your requirment and environemnt
-  
-  terraform executions:
-  
-    To download provider details
-    
-    $terraform init
-    
-    To know the execution going to perform in aws
-    
-    $terraform plan
-    
-    To perform or implement the execution as per the plan in aws
-    
-    $terraform apply
-    
-    To clear or undo the installation from the aws
-    
-    $terraform destroy
-    
-    
-    
-    
-  
-  
-  
-  
-  
 
+Clone the Git repository to your local machine:
 
- 
- 
-  
-  
+bash
+Copy code
+git clone https://github.com/nirmalk1004/terraform.git
+Change to the nginx_alb or nginx_alb_eip folder, depending on your requirement.
 
+Download and move the AWS keypair into the respective folder (nginx_alb or nginx_alb_eip).
 
+Modify the variable.tf file according to your requirements and environment.
 
+Execute the following Terraform commands:
 
+To download provider details:
+terraform init
+
+To view the execution plan:
+terraform plan
+
+To create the infrastructure in AWS:
+terraform apply
+
+To remove the infrastructure from AWS:
+terraform destroy
